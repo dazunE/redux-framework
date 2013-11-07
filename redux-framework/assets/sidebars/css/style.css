@@ -1,0 +1,59 @@
+
+.redux-sidebar-area-delete{
+	position: absolute;
+	right: 50px;
+	margin-top: -28px;
+	display: block;
+	height: 26px;
+	width: 26px;
+	z-index: 100;
+	background: transparent url(../img/trash.png) no-repeat top left;
+}
+
+.redux-sidebar-area-delete:hover{
+	background: transparent url(../img/trash.png) no-repeat bottom left;
+	cursor: pointer;
+	margin-top: -30px;
+}
+
+.activate_spinner{
+	display: block !important;
+	position: absolute;
+	top: 10px;
+	right: 4px;
+	background-color: #ECECEC;
+}
+
+#redux-add-widget form {
+	text-align: center;
+}
+
+#sidebar-redux-custom, #sidebar-redux-custom h3 {
+	position: relative;
+}
+
+#redux-add-widget p {
+	margin-top: 0;
+}
+#redux-add-widget {
+	width: 285px;
+	margin: 0 auto;
+	position: relative;
+}
+
+#redux-add-widget-input { 
+	max-width: 95%; 
+}
+
+#redux-add-box {
+	
+	background-color: #fcfcfc;
+	border-color: #dfdfdf;
+	border-width: 0 1px 1px;
+	border-style: none solid solid;
+	-webkit-border-bottom-right-radius: 3px;
+	-webkit-border-bottom-left-radius: 3px;
+	border-bottom-right-radius: 3px;
+	border-bottom-left-radius: 3px;
+	padding: 10px 5px 0 5px;
+}
