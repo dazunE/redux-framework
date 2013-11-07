@@ -42,7 +42,7 @@
 
           url: window.ajaxurl,
           data: {// Replace redux with a localized variable
-             action: 'redux_sidebars_delete',
+             action: 'redux_sidebars_'+redux_sidebars.args.option_name+'_delete',
              name: widget_name,
              _wpnonce: obj.nonce
           },

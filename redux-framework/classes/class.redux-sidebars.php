@@ -58,7 +58,7 @@ if (!class_exists('Redux_Sidebars')) {
             ), 1000);
             
             // Register the custom ajax hook for deleting
-            add_action('wp_ajax_redux_sidebars_delete', array(
+            add_action('wp_ajax_redux_sidebars_'.$this->args['option_name'].'_delete', array(
                 &$this,
                 'delete_sidebar_area'
             ), 1000);
