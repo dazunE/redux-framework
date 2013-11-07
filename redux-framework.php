@@ -66,11 +66,32 @@ $sections['general'] = array(
     'description'           => __( 'Section Description', 'redux-framework' ),
     'fields'                => array(
         array(
+            'id'            => 'field1',
+            'type'          => 'text',
+            'title'         => __( 'Field 1', 'redux-framework' ),
+            'sub_title'     => __( 'Sub Title', 'redux-framework' ),
+            'description'   => __( 'Description', 'redux-framework' ),
+        ),
+        
+        array(
+            'id'            => 'field2',
+            'type'          => 'text',
+            'requires' => array('field1', '=', 'twenty'),
+            'title'         => __( 'Field 2', 'redux-framework' ),
+            'sub_title'     => __( 'Sub Title', 'redux-framework' ),
+            'description'   => __( 'Description', 'redux-framework' ),
+        ),
+        
+        
+        
+        
+        
+        array(
             'id'            => 'text',
             'type'          => 'text',
             'multi' => true,
             'sortable' => false,
-            'requires' => array('something', '=', '2'),
+            //'requires' => array('something', '=', '2'),
             'title'         => __( 'Text Field - repeatable', 'redux-framework' ),
             'sub_title'     => __( 'Sub Title', 'redux-framework' ),
             'description'   => __( 'Description', 'redux-framework' ),
@@ -116,7 +137,7 @@ $sections['general'] = array(
                     'sub_title'     => __( 'Sub Title', 'redux-framework' ),
                     'description'   => __( 'Description', 'redux-framework' ),
                     'default'       => 'group field 1',
-                    'requires' => array('somethingelse', '=', '4'),
+                    //'requires' => array('somethingelse', '=', '4'),
                     'sanitize'      => array(
                         'sanitize_email',
                         'sanitize_something',
@@ -212,6 +233,7 @@ $sections['general'] = array(
                             'sub_title'     => __( 'Sub Title', 'redux-framework' ),
                             'description'   => __( 'Description', 'redux-framework' ),
                             'default'       => 'single value',
+                            'requires' => array('field1', '=', 'thirty'),
                             'sanitize'      => array(
                                 'sanitize_email',
                                 'sanitize_something',

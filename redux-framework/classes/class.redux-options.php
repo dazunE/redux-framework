@@ -295,12 +295,105 @@ if( !class_exists( 'Redux_Options' ) ) {
                 }
                 
                 
-                jQuery.fn.reduxRequires = function(){
-                       
+                jQuery.fn.reduxRequires = function( usefade ){
+                    var fieldtocheck = jQuery(this).attr('data-redux-check-field');
+                    var operator = jQuery(this).attr('data-redux-check-comparison');
+                    var value1 = jQuery(this).attr('data-redux-check-value');
+                    
+                    var value2 = jQuery('#' + fieldtocheck).val();
+                    
+                    var show = false;
+                    
+                    if(value2){
+                    
+                        switch(operator){
+                            case '=':
+                            case 'equals':
+                                    //if value was array
+                                    if (value2.toString().indexOf('|') !== -1){
+                                            var value2_array = value2.split('|');
+                                            if($.inArray( value1, value2_array ) != -1){
+                                                    show = true;
+                                            }
+                                    }else{
+                                        if(value1 == value2) 
+                                                show = true;
+                                    }
+                                break;
+                            case '!=':    
+                            case 'not':
+                                    //if value was array
+                                    if (value2.indexOf('|') !== -1){
+                                            var value2_array = value2.split('|');
+                                            if($.inArray( value1, value2_array ) == -1){
+                                                    show = true;
+                                            }
+                                    }else{
+                                        if(value1 != value2) 
+                                                show = true;
+                                    }
+                                break;
+                            case '>':    
+                            case 'greater':    
+                            case 'is_larger':
+                                if(parseFloat(value1) >  parseFloat(value2)) 
+                                        show = true;
+                                break;
+                            case '<':
+                            case 'less':    
+                            case 'is_smaller':
+                                if(parseFloat(value1) < parseFloat(value2)) 
+                                        show = true;
+                                break;
+                            case 'contains':
+                                if(value1.indexOf(value2) != -1) 
+                                        show = true;
+                                break;
+                            case 'doesnt_contain':
+                                if(value1.indexOf(value2) == -1) 
+                                        show = true;
+                                break;
+                            case 'is_empty_or':
+                                if(value1 == "" || value1 == value2) 
+                                        show = true;
+                                break;
+                            case 'not_empty_and':
+                                if(value1 != "" && value1 != value2) 
+                                        show = true;
+                                break;
+                        }
+                        
+                    }
+                    
+                    if(show == false){
+                        if(usefade == true){
+                            jQuery(this).fadeOut('slow');
+                        }else{
+                            jQuery(this).hide();   
+                        }
+                    }else{
+                        if(usefade == true){
+                            jQuery(this).fadeIn('slow');
+                        }else{
+                            jQuery(this).show();   
+                        }
+                    }
+                    
                 }
                 
                 
                 jQuery(document).ready(function(){
+                    
+                    //requires
+                    jQuery('[data-redux-check-field]').each(function(index, element){
+                        jQuery(this).reduxRequires(false);
+                    });
+                    
+                    jQuery('.redux-form').on('change', 'input, select, radio, checkbox, textarea', function(e){
+                        jQuery('[data-redux-check-field]').each(function(index, element){
+                            jQuery(this).reduxRequires(true);
+                        });
+                    });
                     
                     //sortable
                     jQuery( ".redux-multi-field.redux-multi-field-sortable" ).sortable({
