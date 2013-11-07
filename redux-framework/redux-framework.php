@@ -109,6 +109,27 @@ if( !class_exists( 'Redux_Framework' ) ) {
             return $r;
         }
         
+        /**
+         * converts an array into a html data string
+         *
+         * @param array $data example input: array('id'=>'true')
+         * @return string $data_string example output: data-id='true'
+         */
+        public static function create_data_string($data = array()){
+            $data_string = "";
+            
+            foreach($data as $key=>$value){
+                if(is_array($value)) $value = implode("|",$value);
+                $data_string .= " data-$key='$value' ";
+            }
+        
+            return $data_string;
+        }
+        
+        public static function compare_value( $value, $operator, $value2 ){
+            
+        }
+        
     }
     
     //fire instance to setup args and autoloader

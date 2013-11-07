@@ -246,10 +246,10 @@ if (!class_exists('Redux_Sidebars')) {
          *
          */
         public function enqueue() {
-            wp_enqueue_style( 'redux-sidebars-css', Redux_Framework::$url . '/assets/sidebars/css/style.css', array(), $this->version);
+            wp_enqueue_style( 'redux-sidebars-css', Redux_Framework::$url . '/assets/sidebars/css/style.css', array(), self::$version);
             wp_enqueue_script( 'redux-sidebars-js', Redux_Framework::$url . '/assets/sidebars/js/script.js', array(
                 'jquery'
-            ), $this->version );
+            ), self::$version );
             $array = array(
                 'some_string' => __('Some string to translate'),
                 'a_value' => '10'

@@ -104,7 +104,7 @@ if( !class_exists( 'Redux_Options' ) ) {
             
             print_r(get_option($this->args['option_name']));
             
-            echo '<form method="post" action="options.php" enctype="multipart/form-data" id="redux-form">';
+            echo '<form method="post" action="options.php" enctype="multipart/form-data" id="redux-form" class="redux-form">';
                 
                 settings_fields($this->args['option_name'].'_group');
             
@@ -125,7 +125,9 @@ if( !class_exists( 'Redux_Options' ) ) {
                                 
                                 $th = ( isset( $field['sub_title'] ) ) ? $field['title'] . '<span class="redux-row-description description">' . $field['sub_title'] . '</span>' : $field['title'];
                                 
-                                echo '<tr valign="top" id="redux-field-row-' . $field['id'] . '" class="redux-field-row" data-id="' . $field['id'] . '">';
+                                $data_string = $field['object']->get_requires_data_string();
+                                
+                                echo '<tr valign="top" id="redux-field-row-' . $field['id'] . '" class="redux-field-row" data-id="' . $field['id'] . '"' . $data_string . '>';
                                     if ( !empty($field['args']['label_for']) ){
                                         echo '<th scope="row"><label for="' . esc_attr( $field['args']['label_for'] ) . '">' . $th . '</label></th>';
                                     }else{
@@ -191,89 +193,137 @@ if( !class_exists( 'Redux_Options' ) ) {
             <script>
                 jQuery.fn.outerHTML = function(){
              
-                // IE, Chrome & Safari will comply with the non-standard outerHTML, all others (FF) will have a fall-back for cloning
-                return (!this.length) ? this : (this[0].outerHTML || (
-                  function(el){
-                      var div = document.createElement('div');
-                      div.appendChild(el.cloneNode(true));
-                      var contents = div.innerHTML;
-                      div = null;
-                      return contents;
-                })(this[0]));
+                    // IE, Chrome & Safari will comply with the non-standard outerHTML, all others (FF) will have a fall-back for cloning
+                    return (!this.length) ? this : (this[0].outerHTML || (
+                      function(el){
+                          var div = document.createElement('div');
+                          div.appendChild(el.cloneNode(true));
+                          var contents = div.innerHTML;
+                          div = null;
+                          return contents;
+                    })(this[0]));
  
+                }
+                
+                jQuery.fn.reduxReIndexFields = function(){
+                    var parent = jQuery(this);
+                    var pattern = parent.attr('data-sortable-pattern');
+                    jQuery(' > .redux-multi-instance', parent).each(function(index, element){
+
+                        var id = jQuery(element).attr('id').split(/[-]+/);
+                        
+                        //get the old values
+                        var old_id = jQuery(element).attr('id');
+                        var old_index = id.pop();
+                        var old_name = pattern.replace('##sortable-index##', old_index);
+                        var old_html = jQuery(element).outerHTML();
+                        
+                        //construct new values
+                        //id = id.slice(0, -1);
+                        id[id.length] = index;
+                        new_id = id.join('-');
+                        var new_name = pattern.replace('##sortable-index##', index);
+                        
+                        //replace values
+                        var new_html = old_html;
+                        //escape old id for regex
+                        old_name = old_name.replace(/(\[|\])/g,'\\$1');
+                        var re = new RegExp(old_name,"g");
+                        var re2 = new RegExp(old_id,"g");
+                        new_html = new_html.replace(re, new_name).replace(re2, new_id);
+                        
+                        jQuery(element).replaceWith(new_html);
+                        
+                    });  
+                }
+                
+                jQuery.fn.reduxRemoveFields = function(){
+                    var tobeindexed = jQuery(this).closest('.redux-multi-field');
+                    var min = jQuery(tobeindexed).attr('data-multi-min');
+                    var items = jQuery(' > .redux-multi-instance', tobeindexed).length - 1;
+                    if(items >= min){
+                        var instance = jQuery(this).closest('.redux-multi-instance');
+                        jQuery(instance).fadeOut('slow', function(){
+                            jQuery(this).remove();
+                            jQuery(tobeindexed).reduxReIndexFields();
+                        });
+                    }else{
+                        //need to localize this
+                        alert('minimun needed: min:' + min + ' items:'+items);   
+                    }
+                }
+                
+                jQuery.fn.reduxCloneFields = function(){
+                    var instance = jQuery(this).closest('.redux-multi-field');
+                    var max = jQuery(instance).attr('data-multi-max');
+                    
+                    if(max != 0){
+                        var items = jQuery(' > .redux-multi-instance', instance).length;
+                        if( items == max ){
+                            //need to localize
+                            alert('too many!');
+                            return;
+                        }
+                    }
+                    
+                    
+                    var clone = jQuery(' > .redux-multi-instance-clone', instance);
+                    var pattern = jQuery(this).attr('data-index-pattern');
+                    
+                    // get unique index
+                    var indexes = [];
+                    jQuery(' > .redux-multi-instance', instance).each(function(index, element){                            
+                        name = jQuery(element).attr('id').split(/[-]+/).pop();
+                        
+                        indexes[parseInt(name)] = parseInt(name);
+                    });
+                    
+                    var index = 0;
+                    while( jQuery.inArray( index, indexes) > -1 ){
+                        index++;   
+                    }
+                    //get unique index
+                    
+                    //var index = jQuery(' > .redux-multi-instance', instance).length;
+                    //this would work with our reindexing, but use above to be sure
+                    
+                    
+                    var template = jQuery(clone).outerHTML();
+                    var re = new RegExp(pattern,"g");
+                    template = template.replace(re, index);
+                    jQuery(template).insertBefore( clone ).addClass('redux-multi-instance').removeClass('redux-multi-instance-clone');
+                }
+                
+                
+                jQuery.fn.reduxRequires = function(){
+                       
                 }
                 
                 
                 jQuery(document).ready(function(){
                     
-                    jQuery('.redux-group-title').live('click', function(){
+                    //sortable
+                    jQuery( ".redux-multi-field.redux-multi-field-sortable" ).sortable({
+                        update: function(event, ui){
+                            jQuery(ui.item).closest('.redux-multi-field').reduxReIndexFields();
+                        }
+                    });
+                    
+                    //multi remove
+                    jQuery('.redux-form').on('click', '.redux-multi-remove', function(){
+                        jQuery(this).reduxRemoveFields();
+                    });
+                    
+                    //multi add
+                    jQuery('.redux-form').on('click', '.redux-multi-field-clone', function(){
+                        jQuery(this).reduxCloneFields();
+                    });
+                    
+                    //slide groups
+                    jQuery('.redux-form').on('click', '.redux-group-title', function(){
                         jQuery(this).next('.redux-group-fields').slideToggle('slow');   
                     });
                     
-                    jQuery( ".redux-multi-field.redux-multi-field-sortable" ).sortable(
-                        {
-                            update: function(event, ui){
-                                var instance = jQuery(ui.item);
-                                var parent = jQuery(instance).closest('.redux-multi-field-sortable');
-                                var pattern = parent.attr('data-sortable-pattern');
-                                jQuery(' > .redux-multi-instance', parent).each(function(index, element){
-
-                                    var id = jQuery(element).attr('id').split(/[-]+/);
-                                    
-                                    //get the old values
-                                    var old_id = jQuery(element).attr('id');
-                                    var old_index = id.pop();
-                                    var old_name = pattern.replace('##sortable-index##', old_index);
-                                    var old_html = jQuery(element).outerHTML();
-                                    
-                                    //construct new values
-                                    //id = id.slice(0, -1);
-                                    id[id.length] = index;
-                                    new_id = id.join('-');
-                                    var new_name = pattern.replace('##sortable-index##', index);
-                                    
-                                    //replace values
-                                    var new_html = old_html;
-                                    //escape old id for regex
-                                    old_name = old_name.replace(/(\[|\])/g,'\\$1');
-                                    var re = new RegExp(old_name,"g");
-                                    var re2 = new RegExp(old_id,"g");
-                                    new_html = new_html.replace(re, new_name).replace(re2, new_id);
-                                    
-                                    jQuery(element).replaceWith(new_html);
-                                    
-                                    //alert(old_html + '\n\n' + new_html);
-                                    
-                                });
-                            }
-                        }
-                    );
-                    
-                    jQuery('.redux-multi-field-clone').live('click', function(){
-                       var instance = jQuery(this).closest('.redux-multi-field');
-                        var clone = jQuery(' > .redux-multi-instance-clone', instance);
-                        var pattern = jQuery(this).attr('data-index-pattern');
-                        
-                        // get unique index
-                        var indexes = [];
-                        jQuery(' > .redux-multi-instance', instance).each(function(index, element){                            
-                            name = jQuery(element).attr('id').split(/[-]+/).pop();
-                            
-                            indexes[parseInt(name)] = parseInt(name);
-                        });
-                        
-                        var index = 0;
-                        while( jQuery.inArray( index, indexes) > -1 ){
-                            index++;   
-                        }
-                        //get unique index
-                        
-                        //var index = jQuery(' > .redux-multi-instance', instance).length;
-                        var template = jQuery(clone).outerHTML();
-                        var re = new RegExp(pattern,"g");
-                        template = template.replace(re, index);
-                        jQuery(template).insertBefore( clone ).addClass('redux-multi-instance').removeClass('redux-multi-instance-clone');
-                    });
                 });
             </script>
 

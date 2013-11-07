@@ -17,7 +17,6 @@ if( !class_exists( 'Redux_Field_Group' ) ) {
         public static $_properties = array(
             'args' => array(
                 'group_title' => '',
-                'group_description' => '',
                 'width' => 'full',
             ),
             'fields' => array(),
@@ -77,10 +76,16 @@ if( !class_exists( 'Redux_Field_Group' ) ) {
         
         public function render( $name, $value ){
             
-            if( $this->field['args']['group_title'] != '' ){
-                echo '<h4 class="redux-group-title">' . $this->field['args']['group_title'] . '</h4>';
+            if($this->field['multi'] == true ){
+                $remove = '<a href="javascript:void(0);" class="redux-multi-remove">'.$this->field['args']['multi_remove_text'].'</a>';
             }else{
-                echo '<h4 class="redux-group-title">' . $this->field['title'] . '</h4>';
+                $remove = '';
+            }
+            
+            if( $this->field['args']['group_title'] != '' ){
+                echo '<h4 class="redux-group-title">' . $this->field['args']['group_title'] . $remove. '</h4>';
+            }else{
+                echo '<h4 class="redux-group-title">' . $this->field['title'] . $remove. '</h4>';
             }
             
             echo '<div class="redux-group-fields">';
@@ -100,17 +105,19 @@ if( !class_exists( 'Redux_Field_Group' ) ) {
                     $title = '';
                 }
                 
-                if( isset( $field['multi'] ) && $field['multi'] === true ){
+                if( $field['multi'] === true && $field['supports_multi'] === true  ){
                     $val = ( isset( $value[$field['id']] ) ) ? $value[$field['id']] : array();
                     $add_text = ( isset( $field['args']['add_text'] ) && $field['args']['add_text'] != '' ) ? $field['args']['add_text'] : __( 'Add Field', 'redux-framework');
                     
                     $sortable = ( $field['sortable'] === true ) ? ' redux-multi-field-sortable' : '';
                     
-                    echo '<div class="redux-field redux-field-' . $field['type'] . ' redux-field-width-' . $field['args']['width'] . '" id="redux-field-' . $field['id'] . '">';
+                    $data_string = $field['object']->get_requires_data_string();
+                    
+                    echo '<div class="redux-field redux-field-' . $field['type'] . ' redux-field-width-' . $field['args']['width'] . '" id="redux-field-' . $field['id'] . '"' . $data_string . ' data-id="' . $field['id'] . '">';
                     
                         echo $title;
                     
-                        echo '<div class="redux-multi-field' . $sortable . '" id="redux-multi-field-' . $this->field['id'] . '" data-field-id="' . $field['id'] . '" data-name="' . $name . '[' . $field['id'] . ']" data-sortable-pattern="' . $name . '[' . $field['id'] . ']' . '[##sortable-index##]' . '">';
+                        echo '<div class="redux-multi-field' . $sortable . '" id="redux-multi-field-' . $this->field['id'] . '" data-field-id="' . $field['id'] . '" data-name="' . $name . '[' . $field['id'] . ']" data-sortable-pattern="' . $name . '[' . $field['id'] . ']' . '[##sortable-index##]' . '" data-multi-min="' . $field['args']['multi_min']. '" data-multi-max="' . $field['args']['multi_max']. '">';
                     
                     
                             foreach( (array) $val as $_index => $_value ){
@@ -142,7 +149,8 @@ if( !class_exists( 'Redux_Field_Group' ) ) {
                 }else{
                     
                     $val = ( isset( $value[$field['id']] ) ) ? $value[$field['id']] : '';
-                    echo '<div class="redux-field redux-field-' . $field['type'] . ' redux-field-width-' . $field['args']['width'] . '" id="redux-field-' . $field['id'] . '">';
+                    $data_string = $field['object']->get_requires_data_string();
+                    echo '<div class="redux-field redux-field-' . $field['type'] . ' redux-field-width-' . $field['args']['width'] . '" id="redux-field-' . $field['id'] . '"' . $data_string . ' data-id="' . $field['id'] . '">';
                         echo $title;
                         $field['object']->template->render( $name . '[' . $field['id'] . ']', $val );
                         $field['object']->description();
@@ -156,7 +164,7 @@ if( !class_exists( 'Redux_Field_Group' ) ) {
         }
         
         public function description(){
-         //empty as we dont want to duplicate it!   
+            //empty as we dont want to duplicate it!   
         }
 
         

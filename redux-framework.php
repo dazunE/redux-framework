@@ -69,6 +69,8 @@ $sections['general'] = array(
             'id'            => 'text',
             'type'          => 'text',
             'multi' => true,
+            'sortable' => false,
+            'requires' => array('something', '=', '2'),
             'title'         => __( 'Text Field - repeatable', 'redux-framework' ),
             'sub_title'     => __( 'Sub Title', 'redux-framework' ),
             'description'   => __( 'Description', 'redux-framework' ),
@@ -89,6 +91,8 @@ $sections['general'] = array(
             'args'          => array(
                 'class'         => 'regular-text',
                 'placeholder'   => 'a placeholder',
+                'multi_min' => 2,
+                'multi_max' => 4,
             ),
             'dev_mode' => true
         ),
@@ -112,6 +116,7 @@ $sections['general'] = array(
                     'sub_title'     => __( 'Sub Title', 'redux-framework' ),
                     'description'   => __( 'Description', 'redux-framework' ),
                     'default'       => 'group field 1',
+                    'requires' => array('somethingelse', '=', '4'),
                     'sanitize'      => array(
                         'sanitize_email',
                         'sanitize_something',

@@ -18,6 +18,7 @@ if( !class_exists( 'Redux_Field' ) ) {
             'id' => '',
             'type' => 'text',
             'multi' => false,
+            'supports_multi' => true,
             'sortable' => true,
             'title' => '',
             'sub_title' => '',
@@ -30,6 +31,8 @@ if( !class_exists( 'Redux_Field' ) ) {
                 'add_class' => 'primary',
                 'label_for' => '',
                 'multi_show_empty' => false,
+                'multi_min' => 0,
+                'multi_max' => 0,
                 'width' => 'full',
             ),
             'dev_mode' => false,
@@ -41,6 +44,10 @@ if( !class_exists( 'Redux_Field' ) ) {
         public $field;
         
         public function __construct( $field ){
+            
+            //set some text vars of $_properties
+            self::$_properties['args']['multi_remove_text'] = __( 'Remove', 'redux-framework' );
+            
             $field = Redux_Framework::parse_args( $field, self::$_properties );
             $field['name'] = $field['name'] . '[' . $field['id'] . ']';
             $this->field = $field;
@@ -57,15 +64,26 @@ if( !class_exists( 'Redux_Field' ) ) {
             return $this->template->santize_value( $value );  
         }
         
+        public function get_requires_data_string(){
+            if (!empty($this->field['requires'])) {
+                $data = array();
+                $data['redux-check-field'] = $this->field['requires'][0];
+                $data['redux-check-comparison'] = $this->field['requires'][1];
+                $data['redux-check-value'] = $this->field['requires'][2];
+                return ' '. Redux_Framework::create_data_string($data);
+            }
+            return '';
+        }
+        
         public function render(){
-            if( isset( $this->field['multi'] ) && $this->field['multi'] === true ){
+            if( $this->field['multi'] === true && $this->field['supports_multi'] === true ){
                 
                 $add_text = ( isset( $this->field['args']['add_text'] ) && $this->field['args']['add_text'] != '' ) ? $this->field['args']['add_text'] : __( 'Add Field', 'redux-framework');
                 
                 $sortable = ( $this->field['sortable'] === true ) ? ' redux-multi-field-sortable' : '';
                 
                 echo '<div class="redux-field redux-field-' . $this->field['type'] . '" id="redux-field-' . $this->field['id'] . '">';
-                    echo '<div class="redux-multi-field'. $sortable . '" id="redux-multi-field-' . $this->field['id'] . '" data-field-id="' . $this->field['id'] . '" data-name="' . $this->field['name'] . '" data-sortable-pattern="' . $this->field['name'] . '[##sortable-index##]' . '">';
+                    echo '<div class="redux-multi-field'. $sortable . '" id="redux-multi-field-' . $this->field['id'] . '" data-field-id="' . $this->field['id'] . '" data-name="' . $this->field['name'] . '" data-sortable-pattern="' . $this->field['name'] . '[##sortable-index##]' . '" data-multi-min="' . $this->field['args']['multi_min']. '" data-multi-max="' . $this->field['args']['multi_max']. '">';
                 
                 
                         foreach( (array) $this->field['value'] as $index => $value ){

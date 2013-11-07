@@ -35,6 +35,9 @@ if( !class_exists( 'Redux_Field_Template' ) ) {
         public function render( $name, $value ){
             //print_r($this->field);
             echo '<input type="text" id="' . $this->field['id'] . '" name="' . $name . '" value="' . $value . '" />';
+            if($this->field['multi'] == true ){
+                echo '<a href="javascript:void(0);" class="redux-multi-remove">'.$this->field['args']['multi_remove_text'].'</a>';
+            }
         }
         
         public function description(){
