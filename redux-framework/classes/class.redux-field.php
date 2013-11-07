@@ -27,8 +27,8 @@ if( !class_exists( 'Redux_Field' ) ) {
             'sanitize' => array(),
             'validate' => array(),
             'args' => array(
-                'add_text' => '',
-                'add_class' => 'primary',
+                'multi_add_text' => '',
+                'multi_add_class' => 'primary',
                 'label_for' => '',
                 'multi_show_empty' => false,
                 'multi_min' => 0,
@@ -45,13 +45,19 @@ if( !class_exists( 'Redux_Field' ) ) {
         
         public function __construct( $field ){
             
+            $class = 'Redux_Field_Template_' . ucfirst( $field['type'] );
+            
             //set some text vars of $_properties
             self::$_properties['args']['multi_remove_text'] = __( 'Remove', 'redux-framework' );
+            self::$_properties['args']['multi_add_text'] = __( 'Add Field', 'redux-framework');
+            
+            //import defaults from field template
+            self::$_properties = Redux_Framework::parse_args( $class::$_properties, self::$_properties );
+            
             
             $field = Redux_Framework::parse_args( $field, self::$_properties );
             $field['name'] = $field['name'] . '[' . $field['id'] . ']';
             $this->field = $field;
-            $class = 'Redux_Field_Template_' . ucfirst( $field['type'] );
             $this->template = new $class( $this->field );
             
         }
@@ -78,8 +84,6 @@ if( !class_exists( 'Redux_Field' ) ) {
         public function render(){
             if( $this->field['multi'] === true && $this->field['supports_multi'] === true ){
                 
-                $add_text = ( isset( $this->field['args']['add_text'] ) && $this->field['args']['add_text'] != '' ) ? $this->field['args']['add_text'] : __( 'Add Field', 'redux-framework');
-                
                 $sortable = ( $this->field['sortable'] === true ) ? ' redux-multi-field-sortable' : '';
                 
                 echo '<div class="redux-field redux-field-' . $this->field['type'] . '" id="redux-field-' . $this->field['id'] . '">';
@@ -105,7 +109,7 @@ if( !class_exists( 'Redux_Field' ) ) {
                         echo '<div class="redux-multi-instance-clone" id="redux-field-' . $this->field['id'] . '-index-##' . $this->field['id'] . '-index##" data-name="' . $this->field['name'] . '[##' . $this->field['id'] . '-index##]">';
                             $this->template->render( $this->field['name'] . '[##' . $this->field['id'] . '-index##]', '' );
                         echo '</div>';
-                        echo '<a href="javascript:void(0);" class="redux-multi-field-clone button-' . $this->field['args']['add_class'] . '" title="' . $add_text . '" data-index-pattern="##' . $this->field['id'] . '-index##">' . $add_text . '</a>';
+                        echo '<a href="javascript:void(0);" class="redux-multi-field-clone button-' . $this->field['args']['multi_add_class'] . '" title="' . $this->field['args']['multi_add_text'] . '" data-index-pattern="##' . $this->field['id'] . '-index##">' . $this->field['args']['multi_add_text'] . '</a>';
                     echo '</div>';
                     $this->description();
                     echo '<div class="clearfix"></div>';

@@ -16,9 +16,18 @@ if( !class_exists( 'Redux_Field_Template_Text' ) ) {
         
         public static $_properties = array(
             'args' => array(
-                'class' => 'regular-text',
+                'classes' => array('regular-text'),
+                'placeholder' => '',
             ),
         );
+        
+        public function render( $name, $value ){
+            //print_r($this->field);
+            echo '<input type="text" id="' . $this->field['id'] . '" class="' . implode(' ', $this->field['args']['classes'] ). '" name="' . $name . '" value="' . $value . '" placeholder="' . $this->field['args']['placeholder'] . '" />';
+            if($this->field['multi'] == true ){
+                echo '<a href="javascript:void(0);" class="redux-multi-remove">'.$this->field['args']['multi_remove_text'].'</a>';
+            }
+        }
         
     }
 }

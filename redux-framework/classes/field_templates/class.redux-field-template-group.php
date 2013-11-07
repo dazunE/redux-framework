@@ -107,7 +107,6 @@ if( !class_exists( 'Redux_Field_Group' ) ) {
                 
                 if( $field['multi'] === true && $field['supports_multi'] === true  ){
                     $val = ( isset( $value[$field['id']] ) ) ? $value[$field['id']] : array();
-                    $add_text = ( isset( $field['args']['add_text'] ) && $field['args']['add_text'] != '' ) ? $field['args']['add_text'] : __( 'Add Field', 'redux-framework');
                     
                     $sortable = ( $field['sortable'] === true ) ? ' redux-multi-field-sortable' : '';
                     
@@ -139,7 +138,7 @@ if( !class_exists( 'Redux_Field_Group' ) ) {
                                 $field['object']->template->render( $name . '[' . $field['id'] . ']' . '[##' . $field['id'] . '-index##]', '' );
                             echo '</div>';
 
-                            echo '<a href="javascript:void(0);" class="redux-multi-field-clone button-' . $field['args']['add_class'] . '" title="' . $add_text . '" data-index-pattern="##' . $field['id'] . '-index##">' . $add_text . '</a>';
+                            echo '<a href="javascript:void(0);" class="redux-multi-field-clone button-' . $field['args']['multi_add_class'] . '" title="' . $this->field['args']['multi_add_text'] . '" data-index-pattern="##' . $field['id'] . '-index##">' . $this->field['args']['multi_add_text'] . '</a>';
                         
                         echo '</div>';
                         $field['object']->description();

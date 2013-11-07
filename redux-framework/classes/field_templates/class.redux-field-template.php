@@ -15,6 +15,7 @@ if( !class_exists( 'Redux_Field_Template' ) ) {
         public static $version = '1.0.0';
         
         public static $_properties = array(
+            'supports_multi' => true,
         );
         
         public $field;

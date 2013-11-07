@@ -71,6 +71,9 @@ $sections['general'] = array(
             'title'         => __( 'Field 1', 'redux-framework' ),
             'sub_title'     => __( 'Sub Title', 'redux-framework' ),
             'description'   => __( 'Description', 'redux-framework' ),
+            'args' => array(
+                'classes' => array('large-text'),  
+            ),
         ),
         
         array(

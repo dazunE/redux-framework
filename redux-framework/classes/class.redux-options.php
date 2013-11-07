@@ -154,6 +154,10 @@ if( !class_exists( 'Redux_Options' ) ) {
                 .redux-multi-instance-clone{
                     display: none;
                 }
+                .redux-sortable-drop{
+                    background: #e9e9e9;
+                    border: 4px dashed #ccc;
+                }
                 .redux-group-title{
                     padding: 10px;
                     background: #ccc;
@@ -390,7 +394,7 @@ if( !class_exists( 'Redux_Options' ) ) {
                     });
                     
                     jQuery('.redux-form').on('change', 'input, select, radio, checkbox, textarea', function(e){
-                        jQuery('[data-redux-check-field]').each(function(index, element){
+                        jQuery('[data-redux-check-field="'+this.id+'"]').each(function(index, element){
                             jQuery(this).reduxRequires(true);
                         });
                     });
@@ -399,7 +403,9 @@ if( !class_exists( 'Redux_Options' ) ) {
                     jQuery( ".redux-multi-field.redux-multi-field-sortable" ).sortable({
                         update: function(event, ui){
                             jQuery(ui.item).closest('.redux-multi-field').reduxReIndexFields();
-                        }
+                        },
+                        placeholder: "redux-sortable-drop",
+                        forcePlaceholderSize: true
                     });
                     
                     //multi remove
