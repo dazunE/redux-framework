@@ -83,7 +83,24 @@ if( !class_exists( 'Redux_Field_Group' ) ) {
             }
             
             if( $this->field['args']['group_title'] != '' ){
-                echo '<h4 class="redux-group-title">' . $this->field['args']['group_title'] . $remove. '</h4>';
+                
+                $gtitle = $this->field['args']['group_title'];
+                
+                preg_match_all("/(\[\w*\])/", $gtitle, $parts, PREG_PATTERN_ORDER );
+                
+                foreach( (array) $parts[0] as $key => $_value ){
+                    $id = str_replace(array('[',']'), '', $_value);
+                    if( isset( $value[$id] ) ){
+                        $valuestring = (is_array($value[$id])) ? implode(',', $value[$id]) : $value[$id];
+                    }else{
+                        $valuestring = '';//$_value; adding the value back wont play nice with repeaters  
+                    }
+                    $gtitle = str_replace( $_value, '<span id="redux-group-title-' . $id . '">' . $valuestring . '</span>', $gtitle);
+                }
+                
+                //$gtitle .= print_r($parts, true);
+                
+                echo '<h4 class="redux-group-title">' . $gtitle . $remove. '</h4>';
             }else{
                 echo '<h4 class="redux-group-title">' . $this->field['title'] . $remove. '</h4>';
             }
@@ -120,7 +137,7 @@ if( !class_exists( 'Redux_Field_Group' ) ) {
                     
                     
                             foreach( (array) $val as $_index => $_value ){
-                                echo '<div class="redux-multi-instance" id="redux-field-' . $field['id'] . '-index-' . $_index . '" data-name="' . $name . '[' . $field['id'] . ']' . '[' . $_index . ']">';
+                                echo '<div class="redux-multi-instance redux-field-' . $field['type'] . '" id="redux-field-' . $field['id'] . '-index-' . $_index . '" data-name="' . $name . '[' . $field['id'] . ']' . '[' . $_index . ']">';
                                 
                                     $field['object']->template->render( $name . '[' . $field['id'] . ']' . '[' . $_index . ']', $_value );
                                 echo '</div>'; 
@@ -129,12 +146,12 @@ if( !class_exists( 'Redux_Field_Group' ) ) {
                             if( $field['args']['multi_show_empty'] == true ){
                                 $count = ( count( $val ) == 0 ) ? 0 : count( $val );
                         
-                                echo '<div class="redux-multi-instance" id="redux-field-' . $field['id'] . '-index-' . $count . '" data-name="' . $name . '[' . $field['id'] . '][' . $count . ']">';
+                                echo '<div class="redux-multi-instance redux-field-' . $this->field['type'] . '" id="redux-field-' . $field['id'] . '-index-' . $count . '" data-name="' . $name . '[' . $field['id'] . '][' . $count . ']">';
                                     $field['object']->template->render( $name . '[' . $field['id'] . ']' . '[' . $count . ']', '' );
                                 echo '</div>';
                             }
                     
-                            echo '<div class="redux-multi-instance-clone" id="redux-field-' . $field['id'] . '-index-##' . $field['id'] . '-index##" data-name="' . $name . '[' . $field['id'] . '][##' . $field['id'] . '-index##]">';
+                            echo '<div class="redux-multi-instance-clone redux-field-' . $this->field['type'] . '" id="redux-field-' . $field['id'] . '-index-##' . $field['id'] . '-index##" data-name="' . $name . '[' . $field['id'] . '][##' . $field['id'] . '-index##]">';
                                 $field['object']->template->render( $name . '[' . $field['id'] . ']' . '[##' . $field['id'] . '-index##]', '' );
                             echo '</div>';
 

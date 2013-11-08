@@ -399,6 +399,20 @@ if( !class_exists( 'Redux_Options' ) ) {
                         });
                     });
                     
+                    
+                    jQuery('.redux-field-group').on('change', 'input, select, radio, checkbox, textarea', function(){
+                        //var group = jQuery(this).closest('.redux-multi-instance.redux-field-group');
+                        //if(typeof group === 'undefined'){
+                            var group = jQuery(this).closest('.redux-field-group');   
+                        //}
+                        var group_title = jQuery(' > .redux-group-title', group);
+                        var val = jQuery(this).val();
+                        jQuery(' > #redux-group-title-' + this.id, group_title).text(val);
+                        //alert(group_title.text());
+                    });
+                    
+                    
+                    
                     //sortable
                     jQuery( ".redux-multi-field.redux-multi-field-sortable" ).sortable({
                         update: function(event, ui){

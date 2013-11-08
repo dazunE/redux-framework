@@ -129,7 +129,7 @@ $sections['general'] = array(
             'sub_title'     => __( 'Sub Title', 'redux-framework' ),
             'description'   => __( 'Description', 'redux-framework' ),
             'args'          => array(
-                'group_title'   => __( 'The Group Title', 'redux-framework' ),
+                'group_title'   => __( 'The Group Title field: [text2], [text3] and nothing here: [text4]', 'redux-framework' ),
                 'group_description'   => __( 'The Group Description', 'redux-framework' ),
             ),
             'fields'        => array(
@@ -201,6 +201,9 @@ $sections['general'] = array(
                     'title'         => __( 'SubLevel Group Field - the nested group', 'redux-framework' ),
                     'sub_title'     => __( 'Sub Title', 'redux-framework' ),
                     'description'   => __( 'Description', 'redux-framework' ),
+                    'args' => array(
+                        'group_title' => 'my nested grpup title: [text4]',
+                    ),
                     'fields'        => array(
                         array(
                             'id'            => 'text4',
@@ -266,7 +269,9 @@ $sections['general'] = array(
             'title'         => __( 'Group Field - repeatable with non repeatable sub fields', 'redux-framework' ),
             'sub_title'     => __( 'Sub Title', 'redux-framework' ),
             'description'   => __( 'Description', 'redux-framework' ),
-            'args'          => array(),
+            'args'          => array(
+                'group_title' => __('each group title with a value: [text6]', 'redux-framework' ),
+            ),
             'fields'        => array(
                 array(
                     'id'            => 'text6',
