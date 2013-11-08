@@ -58,6 +58,15 @@ $options_args = array(
 
 $sections = array();
 
+$sections['test'] = array(
+    'icon'                  => 'cog',  
+    'icon_class'            => 'icon-large',
+    'title'                 => __( 'Test', 'redux-framework' ),
+    'header'                => __( 'Section heading', 'redux-framework' ),
+    'description'           => __( 'Section Description', 'redux-framework' ),
+    'fields'                => array()
+);
+
 $sections['general'] = array(
     'icon'                  => 'home',  
     'icon_class'            => 'icon-large',
@@ -93,7 +102,7 @@ $sections['general'] = array(
             'id'            => 'text',
             'type'          => 'text',
             'multi' => true,
-            'sortable' => false,
+            //'sortable' => false,
             //'requires' => array('something', '=', '2'),
             'title'         => __( 'Text Field - repeatable', 'redux-framework' ),
             'sub_title'     => __( 'Sub Title', 'redux-framework' ),

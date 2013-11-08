@@ -92,6 +92,7 @@ if( !class_exists( 'Redux_Field' ) ) {
                 
                         foreach( (array) $this->field['value'] as $index => $value ){
                             echo '<div class="redux-multi-instance redux-field-' . $this->field['type'] . '" id="redux-field-' . $this->field['id'] . '-index-' . $index . '" data-name="' . $this->field['name'] . '[' . $index . ']">';
+                                echo '<a href="javascript:void(0);" class="redux-sortable-handle">#</a>';
                                 $this->template->render( $this->field['name'] . '[' . $index . ']', $this->field['value'][$index] );
                             echo '</div>';
                         }
@@ -101,12 +102,14 @@ if( !class_exists( 'Redux_Field' ) ) {
                             $count = ( count( $this->field['value'] ) == 0 ) ? 0 : count( $this->field['value'] );
                     
                             echo '<div class="redux-multi-instance redux-field-' . $this->field['type'] . '" id="redux-field-' . $this->field['id'] . '-index-' . $count . '" data-name="' . $this->field['name'] . '[' . count( $this->field['value'] ) . ']">';
+                            echo '<a href="javascript:void(0);" class="redux-sortable-handle">#</a>';
                                 $this->template->render( $this->field['name'] . '[' . $count . ']', '' );
                             echo '</div>';
                             
                         }
                 
                         echo '<div class="redux-multi-instance-clone redux-field-' . $this->field['type'] . '" id="redux-field-' . $this->field['id'] . '-index-##' . $this->field['id'] . '-index##" data-name="' . $this->field['name'] . '[##' . $this->field['id'] . '-index##]">';
+                        echo '<a href="javascript:void(0);" class="redux-sortable-handle">#</a>';
                             $this->template->render( $this->field['name'] . '[##' . $this->field['id'] . '-index##]', '' );
                         echo '</div>';
                         echo '<a href="javascript:void(0);" class="redux-multi-field-clone button-' . $this->field['args']['multi_add_class'] . '" title="' . $this->field['args']['multi_add_text'] . '" data-index-pattern="##' . $this->field['id'] . '-index##">' . $this->field['args']['multi_add_text'] . '</a>';

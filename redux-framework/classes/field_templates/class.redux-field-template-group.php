@@ -138,7 +138,7 @@ if( !class_exists( 'Redux_Field_Group' ) ) {
                     
                             foreach( (array) $val as $_index => $_value ){
                                 echo '<div class="redux-multi-instance redux-field-' . $field['type'] . '" id="redux-field-' . $field['id'] . '-index-' . $_index . '" data-name="' . $name . '[' . $field['id'] . ']' . '[' . $_index . ']">';
-                                
+                                echo '<a href="javascript:void(0);" class="redux-sortable-handle">#</a>';
                                     $field['object']->template->render( $name . '[' . $field['id'] . ']' . '[' . $_index . ']', $_value );
                                 echo '</div>'; 
                             }
@@ -147,11 +147,13 @@ if( !class_exists( 'Redux_Field_Group' ) ) {
                                 $count = ( count( $val ) == 0 ) ? 0 : count( $val );
                         
                                 echo '<div class="redux-multi-instance redux-field-' . $this->field['type'] . '" id="redux-field-' . $field['id'] . '-index-' . $count . '" data-name="' . $name . '[' . $field['id'] . '][' . $count . ']">';
+                                echo '<a href="javascript:void(0);" class="redux-sortable-handle">#</a>';
                                     $field['object']->template->render( $name . '[' . $field['id'] . ']' . '[' . $count . ']', '' );
                                 echo '</div>';
                             }
                     
                             echo '<div class="redux-multi-instance-clone redux-field-' . $this->field['type'] . '" id="redux-field-' . $field['id'] . '-index-##' . $field['id'] . '-index##" data-name="' . $name . '[' . $field['id'] . '][##' . $field['id'] . '-index##]">';
+                            echo '<a href="javascript:void(0);" class="redux-sortable-handle">#</a>';
                                 $field['object']->template->render( $name . '[' . $field['id'] . ']' . '[##' . $field['id'] . '-index##]', '' );
                             echo '</div>';
 
