@@ -27,6 +27,7 @@ if( !class_exists( 'Redux_Field_Template_Text' ) ) {
             if($this->field['multi'] == true ){
                 echo '<a href="javascript:void(0);" class="redux-multi-remove">'.$this->field['args']['multi_remove_text'].'</a>';
             }
+            echo '<br/>';
         }
         
     }

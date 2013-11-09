@@ -220,17 +220,19 @@ if( !class_exists( 'Redux_Options' ) ) {
                 foreach( $this->sections as $id => $section ){
                     if( $section['type'] == 'divide' ) { continue; }
                     foreach( (array) $section['fields'] as $index => $field ){
-                        if( isset( $old_options[$index] ) ){
-                            $old_options[$index] = $field['object']->sanitize_value( $old_options[$index] );
-                        }else{
+                        //if( isset( $old_options[$index] ) ){
+                          //  $old_options[$index] = $field['object']->sanitize_value( $old_options[$index] );
+                        //}else{
                             $old_options[$index] = '';
-                        }
+                        //}
                     }
                 }
                 
                 
                 unset($old_options['redux-submit']);
             }
+            
+            $old_options = apply_filters('redux/options/' . $this->args['option_name'] . '/save', $old_options );
             
             $old_options['redux-updated'] = time();
             

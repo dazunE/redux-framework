@@ -58,77 +58,129 @@ $options_args = array(
 
 $sections = array();
 
-$sections['test'] = array(
+$sections['text'] = array(
     'icon'                  => 'cog',  
     'icon_class'            => 'icon-large',
-    'title'                 => __( 'Test', 'redux-framework' ),
-    'header'                => __( 'Section heading', 'redux-framework' ),
-    'description'           => __( 'Section Description', 'redux-framework' ),
-    'fields'                => array()
-);
-
-$sections['general'] = array(
-    'icon'                  => 'home',  
-    'icon_class'            => 'icon-large',
-    'title'                 => __( 'General Settings', 'redux-framework' ),
-    'header'                => __( 'Section heading', 'redux-framework' ),
-    'description'           => __( 'Section Description', 'redux-framework' ),
+    'title'                 => __( 'Text Fields', 'redux-framework' ),
+    'header'                => __( 'Redux Text Field Options', 'redux-framework' ),
+    'description'           => __( 'Redux Text Field Options', 'redux-framework' ),
     'fields'                => array(
         array(
-            'id'            => 'field1',
+            'id'            => 'small-text',
             'type'          => 'text',
-            'title'         => __( 'Field 1', 'redux-framework' ),
-            'sub_title'     => __( 'Sub Title', 'redux-framework' ),
-            'description'   => __( 'Description', 'redux-framework' ),
+            'title'         => __( 'Small Text', 'redux-framework' ),
+            'sub_title'     => __( 'Small class text field', 'redux-framework' ),
+            'description'   => __( 'Description area', 'redux-framework' ),
+            'args' => array(
+                'classes' => array('small-text'),  
+            ),
+        ),
+        array(
+            'id'            => 'regular-text',
+            'type'          => 'text',
+            'title'         => __( 'Regular Text', 'redux-framework' ),
+            'sub_title'     => __( 'Regular class text field', 'redux-framework' ),
+            'description'   => __( 'Description area', 'redux-framework' ),
+            'args' => array(
+                'classes' => array('regular-text'),  
+            ),
+        ),
+        array(
+            'id'            => 'large-text',
+            'type'          => 'text',
+            'title'         => __( 'Large Text', 'redux-framework' ),
+            'sub_title'     => __( 'Large class text field', 'redux-framework' ),
+            'description'   => __( 'Description area', 'redux-framework' ),
             'args' => array(
                 'classes' => array('large-text'),  
             ),
         ),
-        
+    )
+);
+
+
+$sections['requires'] = array(
+    'icon'                  => 'cog',  
+    'icon_class'            => 'icon-large',
+    'title'                 => __( 'Required Fields', 'redux-framework' ),
+    'header'                => __( 'Required fields can be 1=1 or chainable. and nested fields also work too!', 'redux-framework' ),
+    'description'           => __( 'Required fields can be 1=1 or chainable. and nested fields also work too!', 'redux-framework' ),
+    'fields'                => array(
         array(
-            'id'            => 'field2',
+            'id'            => 'required-text',
             'type'          => 'text',
-            'requires' => array('field1', '=', 'twenty'),
-            'title'         => __( 'Field 2', 'redux-framework' ),
-            'sub_title'     => __( 'Sub Title', 'redux-framework' ),
-            'description'   => __( 'Description', 'redux-framework' ),
+            'title'         => __( 'Required Text', 'redux-framework' ),
+            'description'   => __( 'This text must be "required" for the next field to show.', 'redux-framework' ),
         ),
-        
-        
-        
-        
-        
         array(
-            'id'            => 'text',
+            'id'            => 'requires-text',
             'type'          => 'text',
-            'multi' => true,
-            //'sortable' => false,
-            //'requires' => array('something', '=', '2'),
-            'title'         => __( 'Text Field - repeatable', 'redux-framework' ),
-            'sub_title'     => __( 'Sub Title', 'redux-framework' ),
-            'description'   => __( 'Description', 'redux-framework' ),
-            'default'       => array(
-                0 => 'a string',
-                1 => 'new string'
-            ),
-            'sanitize'      => array(
-                'sanitize_email',
-                'sanitize_something',
-            ),
-            //'sanitize'    => 'santize_email|sanitize_something',
-            'validate'      => array(
-                'is_email',
-                'is_something',
-            ),
-            //'validate'    => 'is_email|is_something',
-            'args'          => array(
-                'class'         => 'regular-text',
-                'placeholder'   => 'a placeholder',
-                'multi_min' => 2,
-                'multi_max' => 4,
+            'title'         => __( 'Requires Text', 'redux-framework' ),
+            'description'   => __( 'The above field must be "required" for this to be displayed. The next field will only show if this field value is "required2".', 'redux-framework' ),
+            'requires' => array('required-text', '=', 'required'),
+        ),
+        array(
+            'id'            => 'requires-text-2',
+            'type'          => 'text',
+            'title'         => __( 'Requires Text chainable', 'redux-framework' ),
+            'description'   => __( 'The above field must be "required2" for this to be displayed.', 'redux-framework' ),
+            'requires' => array('requires-text', '=', 'required2'),
+        ),
+    )
+);
+
+$sections['dev'] = array(
+    'icon'                  => 'cog',  
+    'icon_class'            => 'icon-large',
+    'title'                 => __( 'Dev Fields and Properties', 'redux-framework' ),
+    'header'                => __( 'This section details some of the dev settings for the options page.', 'redux-framework' ),
+    'description'           => __( 'This section details some of the dev settings for the options page.', 'redux-framework' ),
+    'fields'                => array(
+        array(
+            'id'            => 'dev-mode',
+            'type'          => 'text',
+            'title'         => __( 'Dev mode', 'redux-framework' ),
+            'sub_title'     => __( '', 'redux-framework' ),
+            'description'   => __( 'On any field you can define <code>\'dev_mode\' => true</code> in the field array to get all the details stored for this field. This list includes what you define for the field. and the values inheritted from the field template.', 'redux-framework' ),
+            'args' => array(
+                'classes' => array('regular-text'),  
             ),
             'dev_mode' => true
         ),
+        array(
+            'id'            => 'dev-template',
+            'type'          => 'dev',
+            'title'         => __( 'Dev mode', 'redux-framework' ),
+            'sub_title'     => __( '', 'redux-framework' ),
+            'description'   => __( '', 'redux-framework' ),
+        ),
+    )
+);
+
+$sections['import-export'] = array(
+    'icon'                  => 'cog',  
+    'icon_class'            => 'icon-large',
+    'title'                 => __( 'Import/Export', 'redux-framework' ),
+    'header'                => __( 'This section details the import/export field types.', 'redux-framework' ),
+    'description'           => __( 'This section details the import/export field types.', 'redux-framework' ),
+    'fields'                => array(
+        array(
+            'id'            => 'export',
+            'type'          => 'export',
+            'title'         => __( 'Export', 'redux-framework' ),
+            'sub_title'     => __( '', 'redux-framework' ),
+            'description'   => __( 'This field details the options AS THERE ARE BEFORE ALTERATIONS on this page load.', 'redux-framework' ),
+        ),
+    )
+);
+
+$sections['groups'] = array(
+    'icon'                  => 'group',  
+    'icon_class'            => 'icon-large',
+    'title'                 => __( 'Group Fields', 'redux-framework' ),
+    'header'                => __( 'Section heading', 'redux-framework' ),
+    'description'           => __( 'Section Description', 'redux-framework' ),
+    'fields'                => array(
         
         array(
             'id'            => 'group',
@@ -138,54 +190,23 @@ $sections['general'] = array(
             'sub_title'     => __( 'Sub Title', 'redux-framework' ),
             'description'   => __( 'Description', 'redux-framework' ),
             'args'          => array(
-                'group_title'   => __( 'The Group Title field: [text2], [text3] and nothing here: [text4]', 'redux-framework' ),
+                'group_title'   => __( 'The Group Title field: [text2], [text3]', 'redux-framework' ),
                 'group_description'   => __( 'The Group Description', 'redux-framework' ),
             ),
             'fields'        => array(
                 array(
-                    'id'            => 'text2',
+                    'id'            => 'group-text',
                     'type'          => 'text',
                     'title'         => __( 'Text Field', 'redux-framework' ),
                     'sub_title'     => __( 'Sub Title', 'redux-framework' ),
                     'description'   => __( 'Description', 'redux-framework' ),
-                    'default'       => 'group field 1',
-                    //'requires' => array('somethingelse', '=', '4'),
-                    'sanitize'      => array(
-                        'sanitize_email',
-                        'sanitize_something',
-                    ),
-                    //'sanitize'    => 'santize_email|sanitize_something',
-                    'validate'      => array(
-                        'is_email',
-                        'is_something',
-                    ),
-                    //'validate'    => 'is_email|is_something',
-                    'args'          => array(
-                        'class'         => 'regular-text',
-                        'placeholder'   => 'a placeholder',
-                    ),
                 ),
                 array(
-                    'id'            => 'text3',
+                    'id'            => 'group-text2',
                     'type'          => 'text',
                     'title'         => __( 'Text Field', 'redux-framework' ),
                     'sub_title'     => __( 'Sub Title', 'redux-framework' ),
                     'description'   => __( 'Description', 'redux-framework' ),
-                    'default'       => 'group field 2',
-                    'sanitize'      => array(
-                        'sanitize_email',
-                        'sanitize_something',
-                    ),
-                    //'sanitize'    => 'santize_email|sanitize_something',
-                    'validate'      => array(
-                        'is_email',
-                        'is_something',
-                    ),
-                    //'validate'    => 'is_email|is_something',
-                    'args'          => array(
-                        'class'         => 'regular-text',
-                        'placeholder'   => 'a placeholder',
-                    ),
                 ),
             )
         ),
