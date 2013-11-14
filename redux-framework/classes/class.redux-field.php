@@ -67,8 +67,15 @@ if( !class_exists( 'Redux_Field' ) ) {
         }
         
         public function sanitize_value( $value ){
-            return $this->template->santize_value( $value );  
+            return $this->template->sanitize_value( $value );  
         }
+        
+        public function validate_value( $value ){
+            //return 'error message';
+            //return $this->template->sanitize_value( $value );  
+        }
+        
+        
         
         public function get_requires_data_string(){
             if (!empty($this->field['requires'])) {

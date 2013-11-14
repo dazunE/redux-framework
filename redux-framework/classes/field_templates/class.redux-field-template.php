@@ -30,6 +30,25 @@ if( !class_exists( 'Redux_Field_Template' ) ) {
         }
         
         public function sanitize_value( $value ){
+            
+            
+            if( isset( $this->field['multi'] ) && $this->field['multi'] === true ){
+                $value = array_values( array_filter( $value ) );
+                foreach( $value as $key => $val ){
+                    foreach( $this->field['sanitize'] as $function ){
+                        if(function_exists($function)){
+                            $value[$key] = call_user_func( $function, $val );
+                        }
+                    }   
+                }
+            }else{
+                foreach( $this->field['sanitize'] as $function ){
+                    if(function_exists($function)){
+                        $value = call_user_func( $function, $value );
+                    }
+                } 
+            }
+
             return $value;   
         }
         

@@ -211,32 +211,41 @@ if( !class_exists( 'Redux_Options' ) ) {
         public function validate_options( $old_options ){
             
             if( !empty( $old_options['redux-defaults'] ) ){
-                $old_options = array();
-                $old_options = $this->get_default_values();
+                $new_options = $this->get_default_values();
             }else{
                 
-                $old_options = $this->remove_clones( $old_options );
+                $new_options = $this->remove_clones( $old_options );
+                
+                $errors = array();
                 
                 foreach( $this->sections as $id => $section ){
                     if( $section['type'] == 'divide' ) { continue; }
-                    foreach( (array) $section['fields'] as $index => $field ){
-                        //if( isset( $old_options[$index] ) ){
-                          //  $old_options[$index] = $field['object']->sanitize_value( $old_options[$index] );
-                        //}else{
-                            $old_options[$index] = '';
-                        //}
+                    if( !empty( $section['fields'] ) ){
+                        foreach( $section['fields'] as $index => $field ){
+                            if( isset( $new_options[$field['id']] ) ){
+                                $new_options[$field['id']] = $field['object']->sanitize_value( $new_options[$field['id']] );
+                                $error = $field['object']->validate_value( $new_options[$field['id']] );
+                                if($error != ''){
+                                    $errors[$id][$field['id']] = $error;
+                                }
+                            }else{
+                                $new_options[$field['id']] = '';
+                            }
+                        }
                     }
                 }
                 
-                
-                unset($old_options['redux-submit']);
             }
             
-            $old_options = apply_filters('redux/options/' . $this->args['option_name'] . '/save', $old_options );
+            $new_options = apply_filters('redux/options/' . $this->args['option_name'] . '/save', $new_options );
             
-            $old_options['redux-updated'] = time();
+            $new_options['redux-updated'] = time();
             
-            return $old_options;
+            unset( $new_options['redux-submit'] );
+            
+            $new_options['errors'] = $errors;
+            
+            return $new_options;
         }
         
         private function remove_clones( $old_options = array() ){

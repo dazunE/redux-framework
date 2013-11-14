@@ -59,7 +59,7 @@ if( !class_exists( 'Redux_Field_Group' ) ) {
         
         public function sanitize_value( $value ){
             if( isset( $this->field['multi'] ) && $this->field['multi'] === true ){
-                $value = array_filter( $value );
+                $value = array_values( array_filter( $value ) );
                 foreach( $value as $key => $val ){
                     foreach( (array) $this->field['fields'] as $index => $field ){
                         $value[$key][$field['id']] = $field['object']->sanitize_value( $value[$key][$field['id']] );   

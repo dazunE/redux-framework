@@ -99,6 +99,64 @@ $sections['text'] = array(
 );
 
 
+$sections['sanitize'] = array(
+    'icon'                  => 'cog',  
+    'icon_class'            => 'icon-large',
+    'title'                 => __( 'Sanitize Values', 'redux-framework' ),
+    'header'                => __( 'Redux Sanitization Options', 'redux-framework' ),
+    'description'           => __( 'Redux Sanitization Options', 'redux-framework' ),
+    'fields'                => array(
+        array(
+            'id'            => 'sanitize-text',
+            'type'          => 'text',
+            'title'         => __( 'Sanitize Text', 'redux-framework' ),
+            'sub_title'     => __( 'Small class text field', 'redux-framework' ),
+            'description'   => __( 'Description area', 'redux-framework' ),
+            'sanitize' => array(
+                'sanitize_title',
+                'strtoupper'
+            ),
+        ),
+        array(
+            'id'            => 'sanitize-group',
+            'type'          => 'group',
+            'multi' => false,
+            'title'         => __( 'Sanitize Group Field', 'redux-framework' ),
+            'sub_title'     => __( 'Sub Title', 'redux-framework' ),
+            'description'   => __( 'Description', 'redux-framework' ),
+            'args'          => array(
+                'group_title'   => __( 'Sub fields can be sanitized', 'redux-framework' ),
+                'group_description'   => __( 'The Group Description', 'redux-framework' ),
+            ),
+            'fields'        => array(
+                array(
+                    'id'            => 'group-sanitize-text',
+                    'type'          => 'text',
+                    'title'         => __( 'Text Field', 'redux-framework' ),
+                    'sub_title'     => __( 'Sub Title', 'redux-framework' ),
+                    'description'   => __( 'Description', 'redux-framework' ),
+                    'sanitize' => array(
+                        'sanitize_title',
+                        'strtoupper'
+                    ),
+                ),
+                array(
+                    'id'            => 'group-sanitize-text2',
+                    'type'          => 'text',
+                    'title'         => __( 'Text Field', 'redux-framework' ),
+                    'sub_title'     => __( 'Sub Title', 'redux-framework' ),
+                    'description'   => __( 'Description', 'redux-framework' ),
+                    'sanitize' => array(
+                        'sanitize_title',
+                        'strtoupper'
+                    ),
+                ),
+            )
+        ),
+    )
+);
+
+
 $sections['requires'] = array(
     'icon'                  => 'cog',  
     'icon_class'            => 'icon-large',
@@ -247,15 +305,6 @@ $sections['groups'] = array(
                                 'text',
                                 'values'
                             ),
-                            'sanitize'      => array(
-                                'sanitize_email',
-                                'sanitize_something',
-                            ),
-                            //'sanitize'    => 'santize_email|sanitize_something',
-                            'validate'      => array(
-                                'is_email',
-                                'is_something',
-                            ),
                             //'validate'    => 'is_email|is_something',
                             'args'          => array(
                                 'class'         => 'regular-text',
@@ -270,16 +319,6 @@ $sections['groups'] = array(
                             'description'   => __( 'Description', 'redux-framework' ),
                             'default'       => 'single value',
                             'requires' => array('field1', '=', 'thirty'),
-                            'sanitize'      => array(
-                                'sanitize_email',
-                                'sanitize_something',
-                            ),
-                            //'sanitize'    => 'santize_email|sanitize_something',
-                            'validate'      => array(
-                                'is_email',
-                                'is_something',
-                            ),
-                            //'validate'    => 'is_email|is_something',
                             'args'          => array(
                                 'class'         => 'regular-text',
                                 'placeholder'   => 'a placeholder',
@@ -309,15 +348,6 @@ $sections['groups'] = array(
                     'title'         => __( 'Text Field half', 'redux-framework' ),
                     'sub_title'     => __( 'Sub Title', 'redux-framework' ),
                     'description'   => __( 'Description', 'redux-framework' ),
-                    'sanitize'      => array(
-                        'sanitize_email',
-                        'sanitize_something',
-                    ),
-                    //'sanitize'    => 'santize_email|sanitize_something',
-                    'validate'      => array(
-                        'is_email',
-                        'is_something',
-                    ),
                     //'validate'    => 'is_email|is_something',
                     'args'          => array(
                         'class'         => 'regular-text',
@@ -331,16 +361,6 @@ $sections['groups'] = array(
                     'title'         => __( 'Text Field half', 'redux-framework' ),
                     'sub_title'     => __( 'Sub Title', 'redux-framework' ),
                     'description'   => __( 'Description', 'redux-framework' ),
-                    'sanitize'      => array(
-                        'sanitize_email',
-                        'sanitize_something',
-                    ),
-                    //'sanitize'    => 'santize_email|sanitize_something',
-                    'validate'      => array(
-                        'is_email',
-                        'is_something',
-                    ),
-                    //'validate'    => 'is_email|is_something',
                     'args'          => array(
                         'class'         => 'regular-text',
                         'placeholder'   => 'a placeholder',
@@ -353,16 +373,6 @@ $sections['groups'] = array(
                     'title'         => __( 'Text Field third', 'redux-framework' ),
                     'sub_title'     => __( 'Sub Title', 'redux-framework' ),
                     'description'   => __( 'Description', 'redux-framework' ),
-                    'sanitize'      => array(
-                        'sanitize_email',
-                        'sanitize_something',
-                    ),
-                    //'sanitize'    => 'santize_email|sanitize_something',
-                    'validate'      => array(
-                        'is_email',
-                        'is_something',
-                    ),
-                    //'validate'    => 'is_email|is_something',
                     'args'          => array(
                         'class'         => 'regular-text',
                         'placeholder'   => 'a placeholder',
@@ -375,16 +385,6 @@ $sections['groups'] = array(
                     'title'         => __( 'Text Field third', 'redux-framework' ),
                     'sub_title'     => __( 'Sub Title', 'redux-framework' ),
                     'description'   => __( 'Description', 'redux-framework' ),
-                    'sanitize'      => array(
-                        'sanitize_email',
-                        'sanitize_something',
-                    ),
-                    //'sanitize'    => 'santize_email|sanitize_something',
-                    'validate'      => array(
-                        'is_email',
-                        'is_something',
-                    ),
-                    //'validate'    => 'is_email|is_something',
                     'args'          => array(
                         'class'         => 'regular-text',
                         'placeholder'   => 'a placeholder',
@@ -397,16 +397,6 @@ $sections['groups'] = array(
                     'title'         => __( 'Text Field third', 'redux-framework' ),
                     'sub_title'     => __( 'Sub Title', 'redux-framework' ),
                     'description'   => __( 'Description', 'redux-framework' ),
-                    'sanitize'      => array(
-                        'sanitize_email',
-                        'sanitize_something',
-                    ),
-                    //'sanitize'    => 'santize_email|sanitize_something',
-                    'validate'      => array(
-                        'is_email',
-                        'is_something',
-                    ),
-                    //'validate'    => 'is_email|is_something',
                     'args'          => array(
                         'class'         => 'regular-text',
                         'placeholder'   => 'a placeholder',
@@ -419,16 +409,6 @@ $sections['groups'] = array(
                     'title'         => __( 'Text Field quarter', 'redux-framework' ),
                     'sub_title'     => __( 'Sub Title', 'redux-framework' ),
                     'description'   => __( 'Description', 'redux-framework' ),
-                    'sanitize'      => array(
-                        'sanitize_email',
-                        'sanitize_something',
-                    ),
-                    //'sanitize'    => 'santize_email|sanitize_something',
-                    'validate'      => array(
-                        'is_email',
-                        'is_something',
-                    ),
-                    //'validate'    => 'is_email|is_something',
                     'args'          => array(
                         'class'         => 'regular-text',
                         'placeholder'   => 'a placeholder',
@@ -441,16 +421,6 @@ $sections['groups'] = array(
                     'title'         => __( 'Text Field half', 'redux-framework' ),
                     'sub_title'     => __( 'Sub Title', 'redux-framework' ),
                     'description'   => __( 'Description', 'redux-framework' ),
-                    'sanitize'      => array(
-                        'sanitize_email',
-                        'sanitize_something',
-                    ),
-                    //'sanitize'    => 'santize_email|sanitize_something',
-                    'validate'      => array(
-                        'is_email',
-                        'is_something',
-                    ),
-                    //'validate'    => 'is_email|is_something',
                     'args'          => array(
                         'class'         => 'regular-text',
                         'placeholder'   => 'a placeholder',
@@ -463,16 +433,6 @@ $sections['groups'] = array(
                     'title'         => __( 'Text Field quarter', 'redux-framework' ),
                     'sub_title'     => __( 'Sub Title', 'redux-framework' ),
                     'description'   => __( 'Description', 'redux-framework' ),
-                    'sanitize'      => array(
-                        'sanitize_email',
-                        'sanitize_something',
-                    ),
-                    //'sanitize'    => 'santize_email|sanitize_something',
-                    'validate'      => array(
-                        'is_email',
-                        'is_something',
-                    ),
-                    //'validate'    => 'is_email|is_something',
                     'args'          => array(
                         'class'         => 'regular-text',
                         'placeholder'   => 'a placeholder',
