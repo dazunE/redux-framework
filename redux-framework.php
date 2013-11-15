@@ -156,6 +156,105 @@ $sections['sanitize'] = array(
     )
 );
 
+function redux_email($value, $args = array() ){
+    $args = Redux_Framework::parse_args($args, array( 'message' => 'Not a valid email!' ) );
+    if($value != '' && !is_email($value)){
+        throw new Exception($args['message']);   
+    }
+}
+
+function redux_test($value, $args = array() ){
+    $args = Redux_Framework::parse_args($args, array( 'message' => 'This field is required!' ) );
+    if( $value == '' ){
+        throw new Exception($args['message']);
+    }
+}
+
+$sections['validate'] = array(
+    'icon'                  => 'cog',  
+    'icon_class'            => 'icon-large',
+    'title'                 => __( 'Validate Values', 'redux-framework' ),
+    'header'                => __( 'Redux Validation Options', 'redux-framework' ),
+    'description'           => __( 'Redux Validation Options', 'redux-framework' ),
+    'fields'                => array(
+        array(
+            'id'            => 'validate-text',
+            'type'          => 'text',
+            'title'         => __( 'Validate Text', 'redux-framework' ),
+            'sub_title'     => __( 'Small class text field', 'redux-framework' ),
+            'description'   => __( 'Description area', 'redux-framework' ),
+            'validate' => array(
+                'redux_email' => array(),
+                'redux_test' => array()
+            ),
+        ),
+        array(
+            'id'            => 'validate-text2',
+            'type'          => 'text',
+            'title'         => __( 'Validate Text', 'redux-framework' ),
+            'sub_title'     => __( 'Small class text field', 'redux-framework' ),
+            'description'   => __( 'Description area', 'redux-framework' ),
+            'validate' => array(
+                'redux_email' => array()
+            ),
+        ),
+        array(
+            'id'            => 'validate-text3',
+            'type'          => 'text',
+            'title'         => __( 'Validate Text', 'redux-framework' ),
+            'sub_title'     => __( 'Small class text field', 'redux-framework' ),
+            'description'   => __( 'Description area', 'redux-framework' ),
+            'validate' => array(
+                'redux_email' => array()
+            ),
+        ),
+        array(
+            'id'            => 'validate-group',
+            'type'          => 'group',
+            'multi' => false,
+            'title'         => __( 'Validate Group Field', 'redux-framework' ),
+            'sub_title'     => __( 'Sub Title', 'redux-framework' ),
+            'description'   => __( 'Description', 'redux-framework' ),
+            'args'          => array(
+                'group_title'   => __( 'Sub fields can be validated', 'redux-framework' ),
+                'group_description'   => __( 'The Group Description', 'redux-framework' ),
+            ),
+            'fields'        => array(
+                array(
+                    'id'            => 'group-validate-text',
+                    'type'          => 'text',
+                    'title'         => __( 'Text Field', 'redux-framework' ),
+                    'sub_title'     => __( 'Sub Title', 'redux-framework' ),
+                    'description'   => __( 'Description', 'redux-framework' ),
+                    'validate' => array(
+                        'redux_email' => array( 'message' => 'custom error message!')
+                    ),
+                ),
+                array(
+                    'id'            => 'group-validate-text2',
+                    'type'          => 'text',
+                    'title'         => __( 'Text Field', 'redux-framework' ),
+                    'sub_title'     => __( 'Sub Title', 'redux-framework' ),
+                    'description'   => __( 'Description', 'redux-framework' ),
+                    'validate' => array(
+                        'redux_email' => array()
+                    ),
+                ),
+                array(
+                    'id'            => 'group-validate-text3',
+                    'type'          => 'text',
+                    'title'         => __( 'Text Field', 'redux-framework' ),
+                    'sub_title'     => __( 'Sub Title', 'redux-framework' ),
+                    'description'   => __( 'Description', 'redux-framework' ),
+                    'validate' => array(
+                        'redux_test' => array()
+                    ),
+                ),
+            )
+        ),
+    )
+);
+
 
 $sections['requires'] = array(
     'icon'                  => 'cog',  
@@ -348,7 +447,6 @@ $sections['groups'] = array(
                     'title'         => __( 'Text Field half', 'redux-framework' ),
                     'sub_title'     => __( 'Sub Title', 'redux-framework' ),
                     'description'   => __( 'Description', 'redux-framework' ),
-                    //'validate'    => 'is_email|is_something',
                     'args'          => array(
                         'class'         => 'regular-text',
                         'placeholder'   => 'a placeholder',

@@ -73,6 +73,35 @@ if( !class_exists( 'Redux_Field_Group' ) ) {
             return $value;   
         }
         
+        public function validate_value( $value = '' ){
+            
+            $errors = array();
+            
+            if( isset( $this->field['multi'] ) && $this->field['multi'] === true ){
+                foreach( $value as $key => $val ){
+                    foreach( (array) $this->field['fields'] as $index => $field ){
+                        $error = $field['object']->validate_value( $val[$field['id']] );
+                        if( $error != '' ){
+                            $errors[$field['id']] = $error;
+                        }
+                    }   
+                }
+            }else{
+                foreach( (array) $this->field['fields'] as $index => $field ){
+                    $error = $field['object']->validate_value( $value[$field['id']] ); 
+                    if( $error != '' ){
+                        $errors[$field['id']] = $error;
+                    }
+                }
+            }
+            
+            if( !empty( $errors ) ){
+                return $errors;
+            }
+            
+            
+        }
+        
         
         public function render( $name, $value ){
             

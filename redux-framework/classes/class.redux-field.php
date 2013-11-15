@@ -71,8 +71,7 @@ if( !class_exists( 'Redux_Field' ) ) {
         }
         
         public function validate_value( $value ){
-            //return 'error message';
-            //return $this->template->sanitize_value( $value );  
+            return $this->template->validate_value( $value );  
         }
         
         

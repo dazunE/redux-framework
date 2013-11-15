@@ -54,6 +54,8 @@ if( !class_exists( 'Redux_Options' ) ) {
             
             $this->values = get_option($this->args['option_name']);
             
+            $this->values = Redux_Framework::parse_args( $this->values, $this->get_values_array() );
+            
             //setup field class within the sections so we we can use it anywhere!
             foreach( $this->sections as $id => $section ){
                 
@@ -88,8 +90,7 @@ if( !class_exists( 'Redux_Options' ) ) {
             //make sure the option exists
             add_action( 'init', array( &$this, 'set_default_values' ) );
             
-            // Register settings
-            add_action( 'admin_init', array( &$this, 'register_settings' ) );
+            add_action( 'admin_init', array( &$this, 'save_options' ) );
             
             add_action('redux/page/' . $this->args['page_slug'] . '/enqueue', array(&$this, 'enqueue') );
         
@@ -106,11 +107,15 @@ if( !class_exists( 'Redux_Options' ) ) {
         
         public function page_html(){
             
-            print_r(get_option($this->args['option_name']));
+            //print_r(get_option($this->args['option_name']));
             
-            echo '<form method="post" action="options.php" enctype="multipart/form-data" id="redux-form" class="redux-form">';
-                
-                settings_fields($this->args['option_name'].'_group');
+            //print_r($this->get_values_array());
+            
+            echo '<form method="post" action="" enctype="multipart/form-data" id="redux-form" class="redux-form">';
+            
+                wp_nonce_field('redux-options-ajax-'.$this->args['option_name']);
+            
+                echo '<input type="hidden" name="redux-action" value="redux-options-ajax-'.$this->args['option_name'].'" />';
             
                 echo '<div id="redux-back"></div>';
             
@@ -189,9 +194,41 @@ if( !class_exists( 'Redux_Options' ) ) {
             }   
         }
         
+        public function get_values_array(){
+            $array = array();
+            foreach( $this->sections as $key => $section ){
+               foreach( (array) $section['fields'] as $index => $field ){
+                   $array[$field['id']] = $this->get_field_values_array( $field );
+               }
+            }
+            return $array;
+        }
+        
+        private function get_field_values_array( $field ){
+            $array = '';
+            
+            if( isset( $field['multi'] ) && $field['multi'] === true ){
+                $array = array();
+                if( isset( $field['fields'] ) ){
+                    foreach( $field['fields'] as $_field ){
+                        $array[0][$_field['id']] = $this->get_field_values_array( $_field );   
+                    }
+                }
+            }else{
+                if( isset( $field['fields'] ) ){
+                    foreach( $field['fields'] as $_field ){
+                        $array[$_field['id']] = $this->get_field_values_array( $_field );   
+                    }
+                }
+            }
+            
+            return $array;
+        }
+        
         public function get_default_values(){
             
             $values = array();
+            Redux_Framework::parse_args( $this->values, $this->get_values_array() );
             
             foreach( $this->sections as $id => $section ){
                 foreach( (array) $section['fields'] as $index => $field ){
@@ -199,16 +236,12 @@ if( !class_exists( 'Redux_Options' ) ) {
                 }
             }
             
+            $values = Redux_Framework::parse_args( $values, $this->get_values_array() );
+            
             return $values;
         }
         
-        public function register_settings(){
-            
-            register_setting( $this->args['option_name'] . '_group', $this->args['option_name'], array( &$this, 'validate_options' ) );
-            
-        }
-        
-        public function validate_options( $old_options ){
+        private function validate_options( $old_options ){
             
             if( !empty( $old_options['redux-defaults'] ) ){
                 $new_options = $this->get_default_values();
@@ -246,6 +279,32 @@ if( !class_exists( 'Redux_Options' ) ) {
             $new_options['errors'] = $errors;
             
             return $new_options;
+        }
+        
+        public function save_options(){
+            if( isset( $_POST['redux-action'] ) && $_POST['redux-action'] == 'redux-options-ajax-'.$this->args['option_name'] ){
+                 if( isset($_POST['_wpnonce']) && wp_verify_nonce( $_POST['_wpnonce'], 'redux-options-ajax-'.$this->args['option_name'] ) && isset( $_POST[$this->args['option_name']] ) ){
+                     $options = $this->validate_options( $_POST[$this->args['option_name']] );
+                     $errors = array();
+                     if( isset( $options['errors'] ) ){
+                         $errors = $options['errors'];
+                         unset( $options['errors'] );
+                     }
+                     update_option( $this->args['option_name'], $options );
+                     exit(
+                         json_encode(
+                             array(
+                                 'success' => true,
+                                 'msg' => __( 'Settings Saved!', 'redux-framework' ),
+                                 'options' => $options,
+                                 'errors' => $errors
+                             )
+                         )
+                     );
+                 }else{
+                    exit( json_encode( array( 'success' => false, 'msg' => __( 'Nonce Failure!', 'redux-framework' ) ) ) );   
+                 }
+            }
         }
         
         private function remove_clones( $old_options = array() ){

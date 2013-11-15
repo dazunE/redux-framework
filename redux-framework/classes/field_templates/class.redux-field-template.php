@@ -52,6 +52,30 @@ if( !class_exists( 'Redux_Field_Template' ) ) {
             return $value;   
         }
         
+        public function validate_value( $value = '' ){
+            
+            try{
+                if( isset( $this->field['multi'] ) && $this->field['multi'] === true ){
+                    foreach( $value as $key => $val ){
+                        foreach( $this->field['validate'] as $function => $args ){
+                            if(function_exists($function)){
+                                call_user_func( $function, $val, $args );
+                            }
+                        }   
+                    }
+                }else{
+                    foreach( $this->field['validate'] as $function => $args ){
+                        if(function_exists($function)){
+                            call_user_func( $function, $value, $args );
+                        }
+                    } 
+                }
+            }catch( Exception $e ){
+               return $e->getMessage(); 
+            }
+            
+        }
+        
         public function render( $name, $value ){
             //print_r($this->field);
             echo '<input type="text" id="' . $this->field['id'] . '" name="' . $name . '" value="' . $value . '" />';

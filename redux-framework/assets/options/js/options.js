@@ -191,6 +191,18 @@ jQuery.fn.reduxRequires = function( usefade ){
 
 jQuery(document).ready(function(){
     
+    jQuery('#redux-form').submit(function(e){
+        jQuery.post(
+            jQuery(location).attr('href'),
+            jQuery('#redux-form').serialize(),
+            function(data){
+                alert(data);   
+            }
+        );
+        e.preventDefault();
+        return false;
+    });
+    
     //submit scrolls
     var top = jQuery('#redux-save-top').offset().top - parseFloat(jQuery('#redux-save-top').css('marginTop').replace(/auto/, 0));
       jQuery(window).scroll(function (event) {
