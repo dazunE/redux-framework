@@ -58,19 +58,27 @@ if( !class_exists( 'Redux_Field_Template' ) ) {
                 if( isset( $this->field['multi'] ) && $this->field['multi'] === true ){
                     foreach( $value as $key => $val ){
                         foreach( $this->field['validate'] as $function => $args ){
-                            if(function_exists($function)){
+                            if( strpos( $function, '::') !== false ){
+                                    $func = explode('::', $function);
+                            }
+                            
+                            if(function_exists($function) || method_exists( $func[0], $func[1] ) ){
                                 call_user_func( $function, $val, $args );
                             }
                         }   
                     }
                 }else{
                     foreach( $this->field['validate'] as $function => $args ){
-                        if(function_exists($function)){
+                        if( strpos( $function, '::') !== false ){
+                                $func = explode('::', $function);
+                        }
+                        
+                        if(function_exists($function) || method_exists( $func[0], $func[1] ) ){
                             call_user_func( $function, $value, $args );
                         }
                     } 
                 }
-            }catch( Exception $e ){
+            }catch( Redux_Validation_Exception $e ){
                return $e->getMessage(); 
             }
             
