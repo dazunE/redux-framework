@@ -52,26 +52,7 @@ if( !class_exists( 'Redux_Options' ) ) {
             
             $this->sections = apply_filters( 'redux/options/' . $this->args['option_name'] . '/sections' , $sections );
             
-            $this->values = get_option($this->args['option_name']);
-            
-            $this->values = Redux_Framework::parse_args( $this->values, $this->get_values_array() );
-            
-            //setup field class within the sections so we we can use it anywhere!
-            foreach( $this->sections as $id => $section ){
-                
-                $this->sections[$id] = Redux_Framework::parse_args($this->sections[$id], self::$_section_properties);
-                
-                foreach( (array) $section['fields'] as $index => $field ){
-                    
-                    $this->sections[$id]['fields'][$index] = Redux_Framework::parse_args(
-                        $this->sections[$id]['fields'][$index],
-                        Redux_Field::$_properties
-                    );
-                    $this->sections[$id]['fields'][$index]['name'] = $this->args['option_name'];
-                    $this->sections[$id]['fields'][$index]['value'] = $this->values[$field['id']];
-                    $this->sections[$id]['fields'][$index]['object'] = new Redux_Field($this->sections[$id]['fields'][$index]);
-                }
-            }
+            $this->setup_sections();
             
             //create redux page and add our callback to it
             $page_args = array(
@@ -96,6 +77,29 @@ if( !class_exists( 'Redux_Options' ) ) {
         
         }
         
+        private function setup_sections(){
+            $this->values = get_option($this->args['option_name']);
+            
+            $this->values = Redux_Framework::parse_args( $this->values, $this->get_values_array() );
+            
+            //setup field class within the sections so we we can use it anywhere!
+            foreach( $this->sections as $id => $section ){
+                
+                $this->sections[$id] = Redux_Framework::parse_args($this->sections[$id], self::$_section_properties);
+                
+                foreach( (array) $section['fields'] as $index => $field ){
+                    
+                    $this->sections[$id]['fields'][$index] = Redux_Framework::parse_args(
+                        $this->sections[$id]['fields'][$index],
+                        Redux_Field::$_properties
+                    );
+                    $this->sections[$id]['fields'][$index]['name'] = $this->args['option_name'];
+                    $this->sections[$id]['fields'][$index]['value'] = $this->values[$field['id']];
+                    $this->sections[$id]['fields'][$index]['object'] = new Redux_Field($this->sections[$id]['fields'][$index]);
+                }
+            }
+        }
+        
         public function enqueue(){
             wp_enqueue_script('jquery-ui-sortable');
             
@@ -105,13 +109,14 @@ if( !class_exists( 'Redux_Options' ) ) {
         }
         
         
-        public function page_html(){
+        public function page_html( $errors = array(), $ajax = false ){
             
             //print_r(get_option($this->args['option_name']));
             
-            //print_r($this->get_values_array());
             
-            echo '<form method="post" action="" enctype="multipart/form-data" id="redux-form" class="redux-form">';
+            echo ( $ajax == false ) ? '<form method="post" action="" enctype="multipart/form-data" id="redux-form" class="redux-form">' : '';
+            
+                print_r($errors);
             
                 wp_nonce_field('redux-options-ajax-'.$this->args['option_name']);
             
@@ -185,7 +190,7 @@ if( !class_exists( 'Redux_Options' ) ) {
             
                 echo '</div>';
             
-            echo '</form>';
+            echo ( $ajax == false ) ? '</form>' : '';
         }
         
         public function set_default_values(){
@@ -228,7 +233,6 @@ if( !class_exists( 'Redux_Options' ) ) {
         public function get_default_values(){
             
             $values = array();
-            Redux_Framework::parse_args( $this->values, $this->get_values_array() );
             
             foreach( $this->sections as $id => $section ){
                 foreach( (array) $section['fields'] as $index => $field ){
@@ -291,18 +295,10 @@ if( !class_exists( 'Redux_Options' ) ) {
                          unset( $options['errors'] );
                      }
                      update_option( $this->args['option_name'], $options );
-                     exit(
-                         json_encode(
-                             array(
-                                 'success' => true,
-                                 'msg' => __( 'Settings Saved!', 'redux-framework' ),
-                                 'options' => $options,
-                                 'errors' => $errors
-                             )
-                         )
-                     );
-                 }else{
-                    exit( json_encode( array( 'success' => false, 'msg' => __( 'Nonce Failure!', 'redux-framework' ) ) ) );   
+                     $this->setup_sections();
+                     ob_start("ob_gzhandler");
+                     $this->page_html( $errors, true );
+                     exit();
                  }
             }
         }

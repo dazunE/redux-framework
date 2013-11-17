@@ -465,7 +465,7 @@ $sections['import-export'] = array(
         ),
     )
 );
-
+/*
 $sections['dev'] = array(
     'icon'                  => 'cog',  
     'icon_class'            => 'icon-large',
@@ -490,6 +490,7 @@ $sections['dev'] = array(
         ),
     )
 );
+*/
 
 $options = new Redux_Options( $options_args, $sections );
 //$sidebars = new Redux_Sidebars( null, array( 'Lee', 'Dan', 'Dovy' ) );

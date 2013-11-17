@@ -188,15 +188,51 @@ jQuery.fn.reduxRequires = function( usefade ){
     
 }
 
+jQuery.fn.reduxInit = function(){    
+    
+    //sortable
+    jQuery( ".redux-multi-field.redux-multi-field-sortable" ).sortable({
+        update: function(event, ui){
+            jQuery(ui.item).closest('.redux-multi-field').reduxReIndexFields();
+        },
+        placeholder: "redux-sortable-drop",
+        handle: ".redux-sortable-handle",
+        forcePlaceholderSize: true
+    });
+   
+}
+
 
 jQuery(document).ready(function(){
+    
+    jQuery().reduxInit();
+    
+    //multi remove
+    jQuery('#redux-form').on('click', '.redux-multi-remove', function(){
+        jQuery(this).reduxRemoveFields();
+    });
+    
+    //multi add
+    jQuery('#redux-form').on('click', '.redux-multi-field-clone', function(){
+        jQuery(this).reduxCloneFields();
+    });
+    
+    //slide groups
+    jQuery('#redux-form').on('click', '.redux-group-title', function(){
+        jQuery(this).next('.redux-group-fields').slideToggle('slow');   
+    });
     
     jQuery('#redux-form').submit(function(e){
         jQuery.post(
             jQuery(location).attr('href'),
             jQuery('#redux-form').serialize(),
             function(data){
-                alert(data);   
+                if(data != ''){
+                    //kb size of data (approx)
+                    //alert(data.length/1024);
+                    jQuery('#redux-form').html(data);
+                    jQuery().reduxInit();
+                }
             }
         );
         e.preventDefault();
@@ -224,7 +260,7 @@ jQuery(document).ready(function(){
         jQuery(this).reduxRequires(false);
     });
     
-    jQuery('.redux-form').on('change', 'input, select, radio, checkbox, textarea', function(e){
+    jQuery('#redux-form').on('change', 'input, select, radio, checkbox, textarea', function(e){
         jQuery('[data-redux-check-field="'+this.id+'"]').each(function(index, element){
             jQuery(this).reduxRequires(true);
         });
@@ -243,40 +279,13 @@ jQuery(document).ready(function(){
     });
     
     //tab nav
-    jQuery('.redux-section-tab').on('click', function(){
+    jQuery('#redux-form').on('click', '.redux-section-tab',  function(){
         jQuery('.redux-section-tab').not(this).closest('li').removeClass('active');
         jQuery(this).closest('li').addClass('active');
         var id = jQuery(this).attr('href');
         jQuery('.redux-section').not(id).removeClass('active');
         jQuery(id).addClass('active');
         return false;
-    });
-    
-    
-    
-    //sortable
-    jQuery( ".redux-multi-field.redux-multi-field-sortable" ).sortable({
-        update: function(event, ui){
-            jQuery(ui.item).closest('.redux-multi-field').reduxReIndexFields();
-        },
-        placeholder: "redux-sortable-drop",
-        handle: ".redux-sortable-handle",
-        forcePlaceholderSize: true
-    });
-    
-    //multi remove
-    jQuery('.redux-form').on('click', '.redux-multi-remove', function(){
-        jQuery(this).reduxRemoveFields();
-    });
-    
-    //multi add
-    jQuery('.redux-form').on('click', '.redux-multi-field-clone', function(){
-        jQuery(this).reduxCloneFields();
-    });
-    
-    //slide groups
-    jQuery('.redux-form').on('click', '.redux-group-title', function(){
-        jQuery(this).next('.redux-group-fields').slideToggle('slow');   
     });
     
 });
